@@ -1,0 +1,129 @@
+
+ROUND 3 — PREDICTION / CHALLENGE
+MODEL EVALUATION REPORT
+===============================================
+
+Prediction Task
+----------------
+The model predicts the next-hour PM2.5 concentration
+(PM2.5 in µg/m³) using historical air-quality,
+meteorological and time-related variables.
+
+Model
+-----
+Random Forest Regressor
+
+Number of trees: 100
+Maximum depth: 20
+Minimum samples per leaf: 2
+Random state: 42
+
+Dataset
+-------
+Cities:
+- Chennai
+- Delhi
+- Mumbai
+
+Stations:
+- 9 stations
+
+Years:
+- 2021
+- 2022
+- 2023
+
+Total source CSV files: 27
+
+Total observations:
+236,520
+
+Available next-hour target observations:
+211,214
+
+
+Time-Based Evaluation
+---------------------
+
+Training period:
+2021-01-01 to 2022-12-31
+
+Public test period:
+2023-01-01 to 2023-06-30
+
+Private test period:
+2023-07-01 to 2023-12-31
+
+The data was split chronologically rather than randomly
+to avoid using future observations for model training.
+
+
+PUBLIC TEST RESULTS
+-------------------
+
+Observations evaluated: 36082
+
+MAE:
+17.995 µg/m³
+
+RMSE:
+31.142 µg/m³
+
+Actual mean PM2.5:
+111.233 µg/m³
+
+Predicted mean PM2.5:
+114.203 µg/m³
+
+
+PRIVATE TEST RESULTS
+--------------------
+
+Observations evaluated: 30517
+
+MAE:
+19.639 µg/m³
+
+RMSE:
+38.215 µg/m³
+
+Actual mean PM2.5:
+137.695 µg/m³
+
+Predicted mean PM2.5:
+135.057 µg/m³
+
+
+Interpretation
+--------------
+
+MAE represents the average absolute difference between
+the predicted and actual next-hour PM2.5 concentration.
+
+RMSE gives greater penalty to larger prediction errors.
+
+The private test period represents a later unseen period
+and therefore provides a more realistic estimate of how
+the model performs on future observations.
+
+
+Missing Target Values
+---------------------
+
+Rows for which the actual next-hour PM2.5 value was unavailable
+were excluded from metric calculation because an error cannot
+be calculated without the true target value.
+
+Missing predictor values were handled using median imputation
+for numerical variables and most-frequent imputation for
+categorical variables.
+
+Important Data Audit Note
+-------------------------
+
+The preliminary data audit identified repeated source records
+across several station files. Therefore, the 27 CSV files are
+treated as the supplied station-year dataset and are not assumed
+to represent 27 statistically independent datasets.
+
+End of Evaluation Report

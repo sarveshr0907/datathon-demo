@@ -1,0 +1,270 @@
+
+ROUND 3 — PREDICTION / CHALLENGE
+METHODOLOGY
+===============================================
+
+
+1. OBJECTIVE
+------------
+
+The objective of the prediction task is to predict the
+PM2.5 concentration for the next hour using historical
+air-quality measurements, meteorological variables and
+time-based information.
+
+Target variable:
+
+PM2.5 (µg/m³) at the next hour.
+
+
+2. DATASET
+----------
+
+The dataset contains hourly air-quality observations
+covering:
+
+Cities:
+- Chennai
+- Delhi
+- Mumbai
+
+Stations:
+- 9 monitoring stations
+
+Years:
+- 2021
+- 2022
+- 2023
+
+Total source files:
+27 CSV files
+
+Total observations:
+236,520
+
+
+3. DATA PREPARATION
+-------------------
+
+The Timestamp column was converted to datetime format.
+
+Each station's observations were sorted chronologically.
+
+The next-hour PM2.5 value was created by shifting the
+PM2.5 series by one hour within each station.
+
+Historical PM2.5 lag variables were also created:
+
+- PM2.5 lag 1 hour
+- PM2.5 lag 2 hours
+- PM2.5 lag 3 hours
+- PM2.5 lag 6 hours
+- PM2.5 lag 24 hours
+
+
+4. FEATURES USED
+----------------
+
+Pollution variables:
+
+- PM2.5
+- PM10
+- NO
+- NO2
+- NOx
+- NH3
+- SO2
+- CO
+- Ozone
+
+Meteorological variables:
+
+- Air Temperature (AT)
+- Relative Humidity (RH)
+- Wind Speed (WS)
+- Wind Direction (WD)
+- Total Rainfall (TOT-RF)
+- Solar Radiation (SR)
+- Barometric Pressure (BP)
+
+Historical PM2.5 variables:
+
+- PM25_lag1
+- PM25_lag2
+- PM25_lag3
+- PM25_lag6
+- PM25_lag24
+
+Time variables:
+
+- Hour
+- Day of Week
+- Month
+
+Categorical variables:
+
+- City
+- Station
+
+
+5. REMOVED VARIABLES
+--------------------
+
+Variables with extremely high missingness were excluded
+from the modelling feature set.
+
+These included:
+
+- O Xylene
+- VWS
+- MP-Xylene
+- Eth-Benzene
+- Xylene
+- RF
+
+Toluene and Benzene were also excluded from the final
+feature set because of relatively high missingness and
+because they were not required for the demonstration
+prediction pipeline.
+
+
+6. MISSING VALUE HANDLING
+-------------------------
+
+Missing numerical predictor values were handled using
+median imputation.
+
+Missing categorical values were handled using the most
+frequent category.
+
+The imputation procedure was included inside the machine
+learning pipeline so that the imputation parameters were
+learned from the training data.
+
+
+7. TRAIN / TEST DESIGN
+----------------------
+
+A chronological split was used instead of a random split.
+
+Training period:
+
+2021-01-01 to 2022-12-31
+
+Public test period:
+
+2023-01-01 to 2023-06-30
+
+Private test period:
+
+2023-07-01 to 2023-12-31
+
+This time-based design prevents future observations from
+being randomly mixed into the training data.
+
+
+8. MODEL
+--------
+
+Random Forest Regression was selected for the demonstration.
+
+Model configuration:
+
+Number of trees: 100
+Maximum tree depth: 20
+Minimum samples per leaf: 2
+Random state: 42
+
+Random Forest was selected because it can model nonlinear
+relationships between pollutant concentrations,
+meteorological variables and time-related features.
+
+
+9. EVALUATION METRICS
+---------------------
+
+Two evaluation metrics were used.
+
+Mean Absolute Error (MAE):
+
+MAE measures the average absolute difference between the
+predicted and actual PM2.5 concentration.
+
+Root Mean Squared Error (RMSE):
+
+RMSE gives greater weight to larger prediction errors.
+
+
+10. RESULTS
+-----------
+
+Public Test:
+
+Observations evaluated: 36,082
+
+MAE:
+17.995 µg/m³
+
+RMSE:
+31.142 µg/m³
+
+
+Private Test:
+
+Observations evaluated: 30,517
+
+MAE:
+19.639 µg/m³
+
+RMSE:
+38.215 µg/m³
+
+
+11. PREDICTION SUBMISSION
+-------------------------
+
+The prediction output is stored in:
+
+Predictions/predictions.csv
+
+The prediction file contains:
+
+- Timestamp
+- City
+- Station
+- Split
+- Predicted next-hour PM2.5
+
+
+12. DATA QUALITY NOTE
+---------------------
+
+A preliminary audit identified repeated source records
+across several station files.
+
+Therefore, the supplied 27 station-year CSV files are not
+assumed to represent 27 statistically independent datasets.
+
+The duplication was retained and documented rather than
+silently modifying the supplied source data.
+
+
+13. COMPETITION INTERPRETATION
+------------------------------
+
+In an actual competition setting, participants would receive
+the training data with known target values and test data
+without the target values.
+
+Participants would submit their predicted next-hour PM2.5
+values.
+
+The organizers would retain the true test targets and
+calculate the evaluation metrics.
+
+The public test score could be used for an initial leaderboard,
+while the private test score could be used for the final
+ranking.
+
+
+END OF METHODOLOGY
